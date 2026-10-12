@@ -72,18 +72,18 @@ describe("ticket API", () => {
 
     const response = await request(app)
       .get("/api/tickets")
-      .query({ status: "open", page: 2, limit: 1 });
+      .query({ status: "open", page: 2, limit: 10 });
 
     expect(response.status).toBe(200);
     expect(response.body.page).toBe(2);
-    expect(response.body.limit).toBe(1);
+    expect(response.body.limit).toBe(10);
     expect(response.body.total).toBe(1);
     expect(response.body.data).toHaveLength(1);
     expect(prismaMocks.ticket.findMany).toHaveBeenCalledWith({
       where: { status: "open" },
       orderBy: { createdAt: "desc" },
-      skip: 1,
-      take: 1,
+      skip: 10,
+      take: 10,
     });
     expect(prismaMocks.ticket.count).toHaveBeenCalledWith({
       where: { status: "open" },

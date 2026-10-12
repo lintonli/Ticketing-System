@@ -1,9 +1,6 @@
-import dotenv from "dotenv";
 import logger from "./utils/logger.js";
 import { checkDatabaseConnection } from "./prisma/db.js";
 import app from "./app.js";
-
-dotenv.config();
 
 const port = Number(process.env.PORT) || 3000;
 /**
