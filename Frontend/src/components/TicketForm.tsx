@@ -43,9 +43,6 @@ export function TicketForm({ onCreate, isSubmitting }: TicketFormProps) {
         <div>
           <p className="text-xs uppercase tracking-[0.35em] text-cyan-200/70">Create ticket</p>
           <h2 className="mt-2 text-xl font-semibold text-white">Capture the issue in one pass</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
-            Keep it lean: title, description, status, and priority. Defaults already match the backend contract.
-          </p>
         </div>
       </div>
 
