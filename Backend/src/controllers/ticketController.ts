@@ -228,32 +228,3 @@ export const updateTicket = async (
     return next(error);
   }
 };
-
-export const deleteTicket = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const ticketId = getTicketId(req.params.id);
-    if (!ticketId) {
-      return res.status(400).json({ message: "Ticket id is required." });
-    }
-
-    const existingTicket = await prisma.ticket.findUnique({
-      where: { id: ticketId },
-    });
-
-    if (!existingTicket) {
-      return res.status(404).json({ message: "Ticket not found." });
-    }
-
-    await prisma.ticket.delete({
-      where: { id: ticketId },
-    });
-
-    return res.status(204).send();
-  } catch (error) {
-    return next(error);
-  }
-};
