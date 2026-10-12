@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+:root {
+	color-scheme: dark;
+	font-family: 'Space Grotesk', sans-serif;
+	background:
+		radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28%),
+		radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.16), transparent 30%),
+		linear-gradient(180deg, #020617 0%, #020617 55%, #030712 100%);
+}
+
+html {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	min-height: 100vh;
+	background: transparent;
+	color: #e2e8f0;
+	font-family: 'Space Grotesk', sans-serif;
+}
+
+#root {
+	min-height: 100vh;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+::selection {
+	background: rgba(45, 212, 191, 0.35);
+	color: #f8fafc;
+}
+
+.glass-panel {
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	background: linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(2, 6, 23, 0.72));
+	box-shadow: 0 30px 80px rgba(2, 6, 23, 0.55);
+	backdrop-filter: blur(24px);
+}
+
+.glow-ring {
+	position: absolute;
+	inset: auto;
+	border-radius: 9999px;
+	filter: blur(60px);
+	opacity: 0.45;
+	pointer-events: none;
+}
