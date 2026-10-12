@@ -1,0 +1,37 @@
+{
+  "name": "ticketing-api",
+  "version": "1.0.0",
+  "description": "a system for tracking support tickets",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:run": "nodemon dist/server.js",
+    "start": "concurrently npm:start:*",
+    "build": "tsc",
+    "dev": "concurrently npm:start:*",
+    "db:seed": "tsx src/Prisma/seeders/seedTickets.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "@types/concurrently": "^6.4.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "@types/nodemon": "^1.19.6",
+    "@types/pg": "^8.23.1",
+    "concurrently": "^10.0.6",
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "moment-timezone": "^0.6.5",
+    "nodemon": "^3.1.14",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "prisma": "^7.10.0",
+    "tsx": "^4.20.5"
+  }
+}
