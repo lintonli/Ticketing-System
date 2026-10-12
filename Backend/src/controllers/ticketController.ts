@@ -38,17 +38,29 @@ export const getTickets = async (
 
     const status = value.status as TicketStatus | undefined;
     const priority = value.priority as TicketPriority | undefined;
+    const page = value.page ? Number(value.page) : 1;
+    const limit = value.limit ? Number(value.limit) : 10;
+    const skip = (page - 1) * limit;
 
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        ...(status ? { status } : {}),
-        ...(priority ? { priority } : {}),
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    const where = {
+      ...(status ? { status } : {}),
+      ...(priority ? { priority } : {}),
+    };
+
+    const [tickets, total] = await Promise.all([
+      prisma.ticket.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.ticket.count({ where }),
+    ]);
 
     return res.status(200).json({
-      count: tickets.length,
+      page,
+      limit,
+      total,
       data: tickets,
     });
   } catch (error) {
@@ -112,6 +124,37 @@ export const createTicket = async (
       message: "Ticket created successfully.",
       data: ticket,
     });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getTicketStats = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const stats = await prisma.ticket.groupBy({
+      by: ["status"],
+      _count: {
+        status: true,
+      },
+    });
+
+    const counts = Object.values(TicketStatus).reduce<Record<string, number>>(
+      (accumulator, status) => {
+        accumulator[status] = 0;
+        return accumulator;
+      },
+      {},
+    );
+
+    for (const stat of stats) {
+      counts[stat.status] = stat._count.status;
+    }
+
+    return res.status(200).json({ data: counts });
   } catch (error) {
     return next(error);
   }

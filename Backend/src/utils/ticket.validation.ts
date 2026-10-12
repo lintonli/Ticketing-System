@@ -7,6 +7,8 @@ const ticketPriorityValues = Object.values(TicketPriority);
 export const ticketListQuerySchema = Joi.object({
   status: Joi.string().valid(...ticketStatusValues),
   priority: Joi.string().valid(...ticketPriorityValues),
+  page: Joi.number().integer().min(1),
+  limit: Joi.number().integer().min(1).max(100),
 }).unknown(false);
 
 export const createTicketSchema = Joi.object({
