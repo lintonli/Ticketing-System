@@ -16,7 +16,6 @@ const api = axios.create({
   },
 });
 
-export const apiUrlPreview = API_BASE_URL;
 export interface TicketListQuery {
   status?: TicketStatus | "all";
   page?: number;
