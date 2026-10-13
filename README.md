@@ -103,6 +103,7 @@ The current test coverage includes:
 I assumed the assessment favored a compact one-page interface over a route-heavy dashboard, so I collapsed the frontend into a single screen and kept toast notifications for feedback.
 I treated the Prisma enums as the source of truth for ticket status and priority, and only mirrored them in TypeScript where the client needed literal unions.
 I used Axios directly instead of a custom HTTP abstraction so the frontend stayed small and easy to follow. I assumed the backend would run locally on port `3000` and the frontend on `5173`, with CORS configured through `FRONTEND_ORIGIN`. With more time, I would add broader API coverage, stronger input/error-state UI, and a deployment-ready environment split for development versus production.
+I complemented working on the project with AI tools mostly github copilot where necessary
 
 ## Notes
 
