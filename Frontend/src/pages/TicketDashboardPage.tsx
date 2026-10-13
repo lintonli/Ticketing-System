@@ -13,10 +13,6 @@ import { TicketCard } from "../components/TicketCard";
 import { TicketForm } from "../components/TicketForm";
 import { toast } from "react-toastify";
 import {
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-import {
   statusFilterOptions,
   ticketStatusMeta,
   type TicketStatus,
@@ -29,11 +25,8 @@ const initialStats: TicketStats = {
 };
 
 type FilterStatus = TicketStatus | "all";
-type WorkspaceView = "create" | "stats" | "tickets";
 
 export function TicketDashboardPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [stats, setStats] = useState<TicketStats>(initialStats);
   const [page, setPage] = useState(1);
@@ -44,24 +37,6 @@ export function TicketDashboardPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTicketId, setActiveTicketId] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  const workspaceView: WorkspaceView =
-    location.pathname === "/create" ? "create" : location.pathname === "/stats" ? "stats" : "tickets";
-
-  const workspaceViewCopy: Record<WorkspaceView, { title: string; description: string }> = {
-    create: {
-      title: "Create ticket",
-      description: "Use the form to add a new ticket without leaving the workspace.",
-    },
-    stats: {
-      title: "Stats view",
-      description: "Review the live status breakdown returned by the API.",
-    },
-    tickets: {
-      title: "Ticket view",
-      description: "Browse, filter, paginate, and update tickets from one place.",
-    },
-  };
 
   useEffect(() => {
     let alive = true;
@@ -111,7 +86,6 @@ export function TicketDashboardPage() {
       setPage(1);
       setRefreshKey((current) => current + 1);
       toast.success(`Ticket "${response.data.title}" created successfully.`);
-      navigate("/tickets", { replace: true });
     } catch (createError) {
       toast.error(getApiErrorMessage(createError));
     } finally {
@@ -134,36 +108,39 @@ export function TicketDashboardPage() {
   };
 
   return (
-    <>
-      <section className="flex min-h-0 flex-1 flex-col rounded-[2rem]">
-        <div className="flex flex-col gap-2 px-1 pt-1 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{workspaceViewCopy[workspaceView].title}</p>
-            <h2 className="mt-1.5 text-xl font-semibold text-white">{workspaceViewCopy[workspaceView].description}</h2>
+    <div className="relative h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <div className="glow-ring left-[-6rem] top-[-4rem] h-80 w-80 bg-cyan-500/25" />
+      <div className="glow-ring right-[-4rem] top-[10rem] h-96 w-96 bg-orange-500/20" />
+      <div className="glow-ring bottom-[-6rem] left-1/3 h-96 w-96 bg-violet-500/20" />
+
+      <main className="flex h-full w-full p-3 sm:p-4 lg:p-5">
+        <section className="glass-panel flex min-h-0 w-full flex-1 flex-col rounded-[2rem] p-4 sm:p-5 lg:p-6">
+          <div className="flex flex-col gap-2">
+            <p className="text-xs uppercase tracking-[0.35em] text-cyan-200/70">Lodwar Services</p>
+            <h1 className="text-2xl font-semibold text-white">Mini Ticket Tracker</h1>
+            <p className="max-w-2xl text-sm leading-6 text-slate-300">
+              A one-page workspace to create tickets, review stats, and manage the current ticket queue.
+            </p>
           </div>
-        </div>
 
-        <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
-          {workspaceView === "create" ? (
-            <TicketForm onCreate={handleCreateTicket} isSubmitting={isSubmitting} />
-          ) : null}
+          <div className="mt-5 grid min-h-0 flex-1 gap-4 overflow-hidden xl:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
+            <div className="min-h-0 overflow-y-auto pr-1">
+              <TicketForm onCreate={handleCreateTicket} isSubmitting={isSubmitting} />
 
-          {workspaceView === "stats" ? (
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-              <StatCard label="Open" value={stats.open} detail="Tickets waiting for first response or assignment." accent="bg-emerald-400/30" />
-              <StatCard label="In progress" value={stats.in_progress} detail="Tickets currently being worked through." accent="bg-amber-400/30" />
-              <StatCard label="Closed" value={stats.closed} detail="Completed tickets with their status locked in." accent="bg-slate-400/20" />
-              <StatCard label="Total" value={totalVisibleTickets} detail="The full live count returned by the API." accent="bg-cyan-400/30" />
+              <div className="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-1">
+                <StatCard label="Open" value={stats.open} detail="Tickets waiting for first response or assignment." accent="bg-emerald-400/30" />
+                <StatCard label="In progress" value={stats.in_progress} detail="Tickets currently being worked through." accent="bg-amber-400/30" />
+                <StatCard label="Closed" value={stats.closed} detail="Completed tickets with their status locked in." accent="bg-slate-400/20" />
+                <StatCard label="Total" value={totalVisibleTickets} detail="The full live count returned by the API." accent="bg-cyan-400/30" />
+              </div>
             </div>
-          ) : null}
 
-          {workspaceView === "tickets" ? (
-            <div className="flex min-h-0 flex-1 flex-col">
-              <div className="flex flex-col gap-3 border-b border-white/10 pb-3 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex min-h-0 flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/50">
+              <div className="flex flex-col gap-3 border-b border-white/10 px-4 py-4 lg:flex-row lg:items-end lg:justify-between lg:px-5">
                 <div>
-                  <h3 className="text-2xl font-semibold text-white">Unassigned tickets</h3>
+                  <h2 className="text-2xl font-semibold text-white">Unassigned tickets</h2>
                   <p className="text-sm text-slate-300">
-                    Browse the current ticket queue and make quick status changes without leaving the view.
+                    Browse the current queue and make quick status changes without leaving the page.
                   </p>
                 </div>
 
@@ -195,7 +172,7 @@ export function TicketDashboardPage() {
                 </div>
               </div>
 
-              <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1 pb-28">
+              <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 lg:px-5">
                 <div className="space-y-3">
                   {isLoading ? (
                     <div className="rounded-[1.5rem] border border-dashed border-white/10 px-6 py-8 text-center text-sm text-slate-400">
@@ -218,7 +195,7 @@ export function TicketDashboardPage() {
                 </div>
               </div>
 
-              <div className="shrink-0 border-t border-white/10 bg-slate-950/90 px-4 py-3 backdrop-blur">
+              <div className="shrink-0 border-t border-white/10 bg-slate-950/90 px-4 py-3 backdrop-blur lg:px-5">
                 <Pagination
                   page={page}
                   totalPages={totalPages}
@@ -228,9 +205,9 @@ export function TicketDashboardPage() {
                 />
               </div>
             </div>
-          ) : null}
-        </div>
-      </section>
-    </>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
